@@ -1,3 +1,0 @@
-CustomLdapAttributeImportMapperFactory.class
-CustomLdapAttributeImportMapper.class
-META-INF/services/org.keycloak.storage.ldap.mappers.LDAPStorageMapperFactory

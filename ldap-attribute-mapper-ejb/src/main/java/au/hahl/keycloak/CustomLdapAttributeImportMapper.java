@@ -1,3 +1,5 @@
+package au.hahl.keycloak;
+
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
@@ -6,44 +8,42 @@ import org.keycloak.storage.ldap.idm.model.LDAPObject;
 import org.keycloak.storage.ldap.idm.query.internal.LDAPQuery;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapper;
 
-import java.util.*;
+/* REST Client */
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
+
 
 public class CustomLdapAttributeImportMapper extends AbstractLDAPStorageMapper {
 
-    static final String ID = "demo-ldapimport-mapper";
+    static final String ID = "external-api-mapper";
+    static final String API_URL_KEY = "external.api.url";
+    static final org.jboss.logging.Logger log = org.jboss.logging.Logger.getLogger(CustomLdapAttributeImportMapper.class);
 
-    private static final org.jboss.logging.Logger log = org.jboss.logging.Logger.getLogger(CustomLdapAttributeImportMapper.class);
+    /* Get mapper settings */
+    private final ComponentModel model;
+    private final String apiUrl;
 
-    static final String ATTRIBUTES_TO_IMPORT_KEY = "attributesToImport";
-    private final ComponentModel componentModel;
+    public CustomLdapAttributeImportMapper(ComponentModel model, LDAPStorageProvider ldapProvider) {
+        super(model, ldapProvider);
+        this.model = model;
 
-    public CustomLdapAttributeImportMapper(ComponentModel mapperModel, LDAPStorageProvider ldapProvider) {
-        super(mapperModel, ldapProvider);
-        this.componentModel = mapperModel;
+        this.apiUrl = model.get(API_URL_KEY);
+        
     }
 
     @Override
     public void onImportUserFromLDAP(LDAPObject ldapUser, UserModel user, RealmModel realm, boolean isCreate) {
-	log.info("XXXXXXX - onImportUserFromLDAP");
-	List<String> list=new ArrayList<String>();  
-	 //Adding elements in the List  
-	list.add(user.getFirstName() + "@hahl.id.au");
-
-	user.setEmail("properemail@exaple.com");
-        user.setAttribute("example", list);	
-        user.setAttribute("email", list);	
-        user.setAttribute("mail", list);	
+        var userDn = ldapUser.getDn();
+        var request = new HttpGet();
 
 
-	log.info(ldapUser);
-	log.info(user);
-	
+        log.info(apiUrl);
+        log.info("test");
     }
 
     @Override
     public void onRegisterUserToLDAP(LDAPObject ldapUser, UserModel localUser, RealmModel realm) {
-	log.info("XXXXXXX - onRegisterUserToLDAP");
-        // NOOP
     }
 
     @Override
@@ -53,25 +53,5 @@ public class CustomLdapAttributeImportMapper extends AbstractLDAPStorageMapper {
 
     @Override
     public void beforeLDAPQuery(LDAPQuery query) {
-	log.info("XXXXXXX - beforeLDAPQuery");
-
-        String attributeCsv = componentModel.getConfig().getFirst(ATTRIBUTES_TO_IMPORT_KEY);
-	log.info("attributeCsv: " + attributeCsv);
-        if (attributeCsv == null || attributeCsv.trim().isBlank()) {
-	    log.info("no attributes");
-            return;
-        }
-
-        for (String attributeCandidate : attributeCsv.trim().split(",")) {
-            String attribute = attributeCandidate.trim();
-            if (attribute.isBlank()) {
-                continue;
-            }
-            query.addReturningLdapAttribute(attributeCandidate);
-        }
-
-	log.info(query);
-
-
     }
 }

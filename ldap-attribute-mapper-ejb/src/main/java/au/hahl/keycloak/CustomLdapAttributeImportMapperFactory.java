@@ -1,3 +1,5 @@
+package au.hahl.keycloak;
+
 import com.google.auto.service.AutoService;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.RealmModel;
@@ -18,14 +20,18 @@ public class CustomLdapAttributeImportMapperFactory extends AbstractLDAPStorageM
 
     static {
 
-        ProviderConfigProperty attributesToImport = createConfigProperty(
-                CustomLdapAttributeImportMapper.ATTRIBUTES_TO_IMPORT_KEY,
-                "Attributes to Import",
-                "Addtional LDAP Attributes to import as comma separeted list, like e.g. entryUUID",
-                ProviderConfigProperty.STRING_TYPE,
-                Collections.emptyList());
+        /* 
+         * List of properties for the plugin. Currently we support URL.
+         */
+        ProviderConfigProperty urlProperty = createConfigProperty(CustomLdapAttributeImportMapper.API_URL_KEY, 
+                                                                "API Url",
+                                                                "url to the api.",
+                                                                ProviderConfigProperty.STRING_TYPE,
+                                                                Collections.emptyList());
 
-        CONFIG_PROPERTIES = Arrays.asList(attributesToImport);
+
+
+        CONFIG_PROPERTIES = Arrays.asList(urlProperty);
     }
 
     @Override

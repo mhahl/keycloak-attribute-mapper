@@ -7,3 +7,5 @@
 *.classpath
 
 *.factorypath
+
+keycloak-*

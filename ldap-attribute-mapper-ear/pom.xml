@@ -46,6 +46,7 @@
             <type>ejb</type>
         </dependency>
     </dependencies>
+    
 
     <build>
         <finalName>${project.artifactId}</finalName>

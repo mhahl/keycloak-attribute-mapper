@@ -1,1 +1,1 @@
-au.hahl.keycloak.CustomLdapAttributeImportMapperFactory
+au.hahl.keycloak.ExternalAPILdapAttributeImportMapperFactory

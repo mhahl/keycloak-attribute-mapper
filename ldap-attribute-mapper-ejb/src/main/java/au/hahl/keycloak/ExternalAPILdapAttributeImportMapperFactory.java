@@ -19,6 +19,8 @@ package au.hahl.keycloak;
 
 import java.util.List;
 
+import com.google.auto.service.AutoService;
+
 import org.keycloak.component.ComponentModel;
 import org.keycloak.component.ComponentValidationException;
 import org.keycloak.models.KeycloakSession;
@@ -31,11 +33,12 @@ import org.keycloak.storage.ldap.LDAPConfig;
 import org.keycloak.storage.ldap.LDAPStorageProvider;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapper;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapperFactory;
-import org.keycloak.storage.ldap.mappers.FullNameLDAPStorageMapper;
+import org.keycloak.storage.ldap.mappers.LDAPStorageMapperFactory;
 
 /**
- * @author <a href="mailto:mhahl@hahl.id.au">Marek Posolda</a>
+ * @author <a href="mailto:mhahl@hahl.id.au">Mark Hahl</a>
  */
+@AutoService(LDAPStorageMapperFactory.class)
 public class ExternalAPILdapAttributeImportMapperFactory extends AbstractLDAPStorageMapperFactory {
 
     public static final String PROVIDER_ID = "external-api-ldap-attribute-mapper";
@@ -87,6 +90,6 @@ public class ExternalAPILdapAttributeImportMapperFactory extends AbstractLDAPSto
 
     @Override
     protected AbstractLDAPStorageMapper createMapper(ComponentModel mapperModel, LDAPStorageProvider federationProvider) {
-        return new FullNameLDAPStorageMapper(mapperModel, federationProvider);
+        return new ExternalAPILdapAttributeImportMapper(mapperModel, federationProvider);
     }
 }

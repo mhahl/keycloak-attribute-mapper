@@ -41,6 +41,13 @@
     <dependencies>
 
         <dependency>
+            <groupId>au.hahl.keycloak</groupId>
+            <artifactId>ldap-attribute-mapper-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20210307</version>

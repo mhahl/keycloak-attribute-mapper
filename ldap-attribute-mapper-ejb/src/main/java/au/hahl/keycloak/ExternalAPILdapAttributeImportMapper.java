@@ -1,8 +1,5 @@
 package au.hahl.keycloak;
 
-import java.io.IOException;
-import java.util.Map;
-
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
@@ -14,12 +11,6 @@ import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapper;
 
 import lombok.extern.jbosslog.JBossLog;
 
-/* REST Client */
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 
 @JBossLog
 public class ExternalAPILdapAttributeImportMapper extends AbstractLDAPStorageMapper {
@@ -33,47 +24,12 @@ public class ExternalAPILdapAttributeImportMapper extends AbstractLDAPStorageMap
         this.componentModel = mapperModel;
     }    
 
-    /**
-     * Return attribues to set from the API.
-     * @param dn  User DN
-     * @param uri Service URL
-     * @return Attributes to set for the user.
-     */
-    Map<String, Object> callApi(LDAPObject ldapUser, String url) throws IOException {
-
-        /* Build request json */
-        JSONObject json = new JSONObject();
-        json.put("dn", ldapUser.getDn().toString());
-        json.put("uuid", ldapUser.getUuid());
-
-        /* Build HTTP Post request */
-        var client = HttpClientBuilder.create().build();
-        StringEntity params = new StringEntity(json.toString());
-
-        HttpPost request = new HttpPost(url);
-        request.addHeader("content-type", "application/json");
-        request.setEntity(params);
-
-        try (var response = client.execute(request)) {
-            log.info("sent http");
-        } catch (Exception e) {
-            log.error("error in http post request:\n\t" + e.getMessage());
-        }
-
-        return null;
-    
-    }
+            //callApi(ldapUser, componentModel.get(ExternalAPILdapAttributeImportMapper.URL_PROPERTY));
+    // uid=svc-hahl-test_bind,cn=users,cn=accounts,dc=hahl,dc=id,dc=au
 
     @Override
     public void onImportUserFromLDAP(LDAPObject ldapUser, UserModel user, RealmModel realm, boolean isCreate) {
-
-        try {
-            Map<String, Object> attributes;
-            callApi(ldapUser, componentModel.get(ExternalAPILdapAttributeImportMapper.URL_PROPERTY));
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-
+        //var client = new APIClient();
     }
 
     @Override

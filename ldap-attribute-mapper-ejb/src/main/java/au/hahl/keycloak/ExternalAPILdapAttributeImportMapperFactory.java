@@ -43,7 +43,6 @@ public class ExternalAPILdapAttributeImportMapperFactory extends AbstractLDAPSto
 
     public static final String PROVIDER_ID = "external-api-ldap-attribute-mapper";
 
-
     protected static final List<ProviderConfigProperty> configProperties;
 
     static {
@@ -56,7 +55,6 @@ public class ExternalAPILdapAttributeImportMapperFactory extends AbstractLDAPSto
             LDAPConfig config = new LDAPConfig(parent.getConfig());
             readOnly = config.getEditMode() != UserStorageProvider.EditMode.WRITABLE;
         }
-
 
         return ProviderConfigurationBuilder.create()
                 .property().name(ExternalAPILdapAttributeImportMapper.URL_PROPERTY)

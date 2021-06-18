@@ -1,16 +1,18 @@
 package au.hahl.keycloak;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.Getter;
 
 /**
  * Represents a user and the users attributes.
  * 
  */
-public class User {
+public class UserDetails {
 
-    public String name;
+    @Getter
+    public String username;
     public Map<String, String[]> attributes;
 
     public Set<String> getAttributeValues(String attributeName) {

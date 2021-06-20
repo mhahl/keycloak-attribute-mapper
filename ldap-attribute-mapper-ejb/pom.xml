@@ -43,26 +43,21 @@
         <dependency>
             <groupId>au.hahl.keycloak</groupId>
             <artifactId>ldap-attribute-mapper-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${ldap-attribute-mapper.version}</version>
             <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20210307</version>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.auto.service</groupId>
             <artifactId>auto-service</artifactId>
+            <version>${auto-service.version}</version>
             <optional>true</optional>
         </dependency>
 

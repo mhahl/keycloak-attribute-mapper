@@ -56,14 +56,18 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
 
-	<!-- Other deps -->
-	<keycloak.version>13.0.1</keycloak.version>
+	    <!-- Other deps -->
+        <ldap-attribute-mapper.version>1.0-SNAPSHOT</ldap-attribute-mapper.version>
+	    <keycloak.version>13.0.1</keycloak.version>
         <auto-service.version>1.0</auto-service.version>
+        <lombok.version>1.18.20</lombok.version>
+        <jackson-core.version>2.12.3</jackson-core.version>
+        <jackson-databind.version>2.12.3</jackson-databind.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>com.google.auto.service</groupId>
                 <artifactId>auto-service</artifactId>

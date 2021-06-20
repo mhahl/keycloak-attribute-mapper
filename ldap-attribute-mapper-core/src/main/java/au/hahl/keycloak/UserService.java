@@ -31,10 +31,10 @@ public class UserService {
      */
     public UserDetails getUserDetails(String userDn) throws IOException {
 
-        // fix
+        // Build the json.
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode requestNode = mapper.createObjectNode();
-        requestNode.put("dn", userDn);
+        requestNode.put("username", userDn);
 
         /* Build HTTP Post request */
         var client = HttpClientBuilder.create().build();

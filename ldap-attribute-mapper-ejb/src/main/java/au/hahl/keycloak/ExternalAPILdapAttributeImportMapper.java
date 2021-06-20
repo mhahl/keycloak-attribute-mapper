@@ -38,19 +38,29 @@ public class ExternalAPILdapAttributeImportMapper extends AbstractLDAPStorageMap
 
             /* Retrieve the user details from the API */
             UserDetails apiUser = userService.getUserDetails(keycloakUser.getUsername());
-            log.info(String.format("Updating keycloak user '%s' with external user '%s'",
+            log.info(String.format("updating keycloak user '%s' with external user '%s'",
                 keycloakUser.getUsername(),
                 apiUser.getUsername()));
 
             /* Update the user paramaters */
             for (Map.Entry<String, String[]> attribute : apiUser.attributes.entrySet()) {
+
+                /* If the atribute is `null` remove the attribute. */
+                if(attribute.getValue() == null) {
+                    log.info("removing attribute " + attribute.getKey());
+                    keycloakUser.removeAttribute(attribute.getKey());
+                    return;
+                }
+
+                /* If the attribute is not null, set the value */
                 var values = List.of(attribute.getValue());
                 keycloakUser.setAttribute(attribute.getKey(), values);
-                log.info("Setting attribute " + attribute.getKey() + " to " + values.toString() );
+                log.info("setting attribute " + attribute.getKey() + " to " + values.toString() );
             }
             
 
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("could not return details: \n\t" + e.getMessage());
         }
     }

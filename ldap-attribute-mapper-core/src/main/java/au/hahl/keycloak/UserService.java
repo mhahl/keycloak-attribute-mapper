@@ -29,7 +29,7 @@ public class UserService {
      * @param uri Service URL
      * @return UserModel user representation.
      */
-    public UserDetails getUserDetails(String userDn) throws IOException {
+    public UserDetails getUserDetails(String userDn) throws IOException, InvalidUserException {
 
         // Build the json.
         ObjectMapper mapper = new ObjectMapper();
@@ -60,14 +60,21 @@ public class UserService {
                 var result = EntityUtils.toString(entity);
                 UserDetails user = mapper.readValue(result, UserDetails.class);
 
+                /* If the user does not have a name then fal */
+                if (user.username == null) {
+                    throw new InvalidUserException("response does not contain a `username` paramater");
+                }
+                if (user.attributes == null) {
+                    throw new InvalidUserException("response does not contain a `attributes` paramater");
+                }
+
                 return user;
             }
-        } catch (Exception e) {
-            throw e;
+        } catch (com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException e) {
+            throw new InvalidUserException("invalid json");
         }
-
         /* No value */
-        return null;
-    
+        throw new InvalidUserException("http request failed");
+            
     }
 }

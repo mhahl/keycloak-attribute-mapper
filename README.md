@@ -29,7 +29,7 @@ Content-Type: application/json
             "myValue1", "myValue2"
         ],
         "example_test": [
-            "value"
+            "value" 
         ]
     }
 }

@@ -1,0 +1,14 @@
+{
+    "username": "test",
+    "attributes": {
+      "favouriteMovie": null,
+      "favouriteColours": [
+        "blue",
+        "green",
+        "purple"
+      ],
+      "favouriteNumbers": [
+        "1"
+      ]
+    }
+  }

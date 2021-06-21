@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.Set;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Represents a user and the users attributes.
  * 
  */
+@ToString
 public class UserDetails {
 
     @Getter

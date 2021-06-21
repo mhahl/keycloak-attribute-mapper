@@ -44,3 +44,15 @@ If any of the attributes are null they will be removed.
         "myAttribute": null
     }
 }
+
+# Development
+
+Download keycloak into the project directory and extract. Modify the `deploy.sh` to copy the 
+`ear` files into the correct path.
+
+To build run:
+* `mvn clean package`
+
+To run tests:
+* `mvn test`
+

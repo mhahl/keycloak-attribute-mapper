@@ -9,7 +9,7 @@ import lombok.ToString;
 
 /**
  * Represents a user and the users attributes.
- * 
+ * @author Mark Hahl <mark@hahl.id.au>
  */
 @ToString
 public class UserDetails {
@@ -30,7 +30,7 @@ public class UserDetails {
 
     /**
      * Return a list of all attrbutes.
-     * @return
+     * @return Set<String> of atributes.
      */
     public Set<String> getAttrbutes() {
         return attributes.keySet();

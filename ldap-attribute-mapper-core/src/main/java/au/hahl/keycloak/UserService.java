@@ -14,6 +14,9 @@ import org.apache.http.util.EntityUtils;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Mark Hahl <mark@hahl.id.au>
+ */
 public class UserService {
 
     @Getter @Setter
@@ -31,7 +34,7 @@ public class UserService {
      */
     public UserDetails getUserDetails(String userDn) throws IOException, InvalidUserException {
 
-        // Build the json.
+        /* Build the json. */
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode requestNode = mapper.createObjectNode();
         requestNode.put("username", userDn);
@@ -41,7 +44,7 @@ public class UserService {
         String json = mapper.writeValueAsString(requestNode);
         StringEntity params = new StringEntity(json);
 
-        /* Send request */
+        /* Build the HTTP Post and set the required paramaers */
         HttpPost request = new HttpPost(this.apiUrl);
         request.addHeader("content-type", "application/json");
         request.setEntity(params);
@@ -50,20 +53,19 @@ public class UserService {
             var entity = response.getEntity();
 
             /**
-             * Check the response is HTTP 200 and returns.
+             * Check the response is HTTP 200 and the data has been been mapped
+             * to the userDetils. Check if the username or attributes are null,
+             * as they should never be null, only blank.
              */
             if (entity != null && response.getStatusLine().getStatusCode() == 200) {
 
-                /**
-                 * Convert the reponse `result` to JSON.
-                 */
                 var result = EntityUtils.toString(entity);
                 UserDetails user = mapper.readValue(result, UserDetails.class);
 
-                /* If the user does not have a name then fal */
                 if (user.username == null) {
                     throw new InvalidUserException("response does not contain a `username` paramater");
                 }
+
                 if (user.attributes == null) {
                     throw new InvalidUserException("response does not contain a `attributes` paramater");
                 }

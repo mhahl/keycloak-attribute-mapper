@@ -1,6 +1,5 @@
-package au.hahl.keycloak;
+package au.hahl.keycloak.mappers;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,18 +7,20 @@ import org.keycloak.component.ComponentModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.storage.ldap.LDAPStorageProvider;
-import org.keycloak.storage.ldap.idm.model.LDAPDn;
 import org.keycloak.storage.ldap.idm.model.LDAPObject;
 import org.keycloak.storage.ldap.idm.query.internal.LDAPQuery;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapper;
 
+import au.hahl.keycloak.UserDetails;
+import au.hahl.keycloak.UserService;
+
 import lombok.extern.jbosslog.JBossLog;
 
-
+/**
+ * @author Mark Hahl <mark@hahl.id.au>
+ */
 @JBossLog
 public class ExternalAPILdapAttributeImportMapper extends AbstractLDAPStorageMapper {
-
-    public static final String URL_PROPERTY = "api.url.property";
 
     private final UserService userService;
     private final ComponentModel componentModel;
@@ -28,40 +29,36 @@ public class ExternalAPILdapAttributeImportMapper extends AbstractLDAPStorageMap
         super(mapperModel, ldapProvider);
         this.componentModel = mapperModel;
 
-        var url = componentModel.get(URL_PROPERTY);
+        var url = componentModel.get(ExternalAPILdapImportMapperFactory.URL_PROPERTY);
         this.userService = new UserService(url);
-    }    
+    }
 
+    /**
+     * Sync attributes when the user is imported from LDAP.
+     * 
+     * When the user is imported from LDAP query the API for the attribute details.
+     * If the attribute is `null` then remove the attribute from the user.
+     * 
+     * Attributes which already have values will be writen over.
+     */
     @Override
     public void onImportUserFromLDAP(LDAPObject ldapUser, UserModel keycloakUser, RealmModel realm, boolean isCreate) {
         try {
 
-            /* Retrieve the user details from the API */
             UserDetails apiUser = userService.getUserDetails(keycloakUser.getUsername());
-            log.info(String.format("updating keycloak user '%s' with external user '%s'",
-                keycloakUser.getUsername(),
-                apiUser.getUsername()));
-
-            /* Update the user paramaters */
             for (Map.Entry<String, String[]> attribute : apiUser.attributes.entrySet()) {
 
-                /* If the atribute is `null` remove the attribute. */
-                if(attribute.getValue() == null) {
-                    log.info("removing attribute " + attribute.getKey());
+                if (attribute.getValue() == null) {
                     keycloakUser.removeAttribute(attribute.getKey());
                     return;
                 }
 
-                /* If the attribute is not null, set the value */
                 var values = List.of(attribute.getValue());
                 keycloakUser.setAttribute(attribute.getKey(), values);
-                log.info("setting attribute " + attribute.getKey() + " to " + values.toString() );
             }
-            
 
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("could not return details: \n\t" + e.getMessage());
         }
     }
 

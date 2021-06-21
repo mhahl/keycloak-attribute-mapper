@@ -1,1 +1,1 @@
-au.hahl.keycloak.ExternalAPILdapAttributeImportMapper
+au.hahl.keycloak.mappers.ExternalAPILdapAttributeImportMapper

@@ -3,6 +3,7 @@ package au.hahl.keycloak;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -16,7 +17,11 @@ public class UserDetails {
 
     @Getter
     public String username;
+
+    @Getter
     public Map<String, String[]> attributes;
+
+    @Getter
     public List<String> groups;
 
     /**
@@ -34,6 +39,10 @@ public class UserDetails {
      */
     public Set<String> getAttrbutes() {
         return attributes.keySet();
+    }
+
+    public Stream<String> getGroupsStream() {
+        return Stream.of((String[])groups.toArray());
     }
 
 }

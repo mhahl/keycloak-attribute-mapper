@@ -20,12 +20,12 @@ import lombok.extern.jbosslog.JBossLog;
  * @author Mark Hahl <mark@hahl.id.au>
  */
 @JBossLog
-public class ExternalAPILdapAttributeImportMapper extends AbstractLDAPStorageMapper {
+public class ExternalAPILdapGroupImportMapper extends AbstractLDAPStorageMapper {
 
     private final UserService userService;
     private final ComponentModel componentModel;
 
-    public ExternalAPILdapAttributeImportMapper(ComponentModel mapperModel, LDAPStorageProvider ldapProvider) {
+    public ExternalAPILdapGroupImportMapper(ComponentModel mapperModel, LDAPStorageProvider ldapProvider) {
         super(mapperModel, ldapProvider);
         this.componentModel = mapperModel;
 
@@ -46,15 +46,8 @@ public class ExternalAPILdapAttributeImportMapper extends AbstractLDAPStorageMap
         try {
 
             UserDetails apiUser = userService.getUserDetails(keycloakUser.getUsername());
-            for (Map.Entry<String, String[]> attribute : apiUser.attributes.entrySet()) {
-
-                if (attribute.getValue() == null) {
-                    keycloakUser.removeAttribute(attribute.getKey());
-                    continue;
-                }
-
-                var values = List.of(attribute.getValue());
-                keycloakUser.setAttribute(attribute.getKey(), values);
+            for (String group : apiUser.groups) {
+                log.info(group);
             }
 
         } catch (Exception e) {

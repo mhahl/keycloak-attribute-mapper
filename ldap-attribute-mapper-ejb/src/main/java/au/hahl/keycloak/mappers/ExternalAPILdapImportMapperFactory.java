@@ -17,12 +17,17 @@
 
 package au.hahl.keycloak.mappers;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.google.auto.service.AutoService;
 
 import org.keycloak.component.ComponentModel;
+import org.keycloak.component.ComponentValidationException;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
@@ -31,9 +36,12 @@ import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapper;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapperFactory;
 import org.keycloak.storage.ldap.mappers.LDAPStorageMapperFactory;
 
+import lombok.extern.jbosslog.JBossLog;
+
 /**
  * @author <a href="mailto:mhahl@hahl.id.au">Mark Hahl</a>
  */
+@JBossLog
 @AutoService(LDAPStorageMapperFactory.class)
 public class ExternalAPILdapImportMapperFactory extends AbstractLDAPStorageMapperFactory {
 
@@ -115,9 +123,19 @@ public class ExternalAPILdapImportMapperFactory extends AbstractLDAPStorageMappe
 
         if (type == ImportType.IMPORT_ATRIBUTES) {
             return new ExternalAPILdapAttributeImportMapper(mapperModel, federationProvider);
-        } else {
-            // XXX not implimented yet
+        } else if (type == ImportType.IMPORT_GROUPS) {
+            return new ExternalAPILdapGroupImportMapper(mapperModel, federationProvider);
         }
         return null;
+    }
+
+    @Override
+    public void validateConfiguration(KeycloakSession session, RealmModel realm, ComponentModel componentModel) {
+        var url = componentModel.get(URL_PROPERTY);
+        try {
+            new URL(url).toURI();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new ComponentValidationException("Malformed URL");
+        }
     }
 }
